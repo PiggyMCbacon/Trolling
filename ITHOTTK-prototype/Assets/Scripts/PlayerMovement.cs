@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
+
     private Rigidbody2D rb;
     private Vector2 movement;
 
@@ -16,7 +17,7 @@ public class PlayerMovement : MonoBehaviour
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
-        movement.Normalize(); // prevent faster diagonal movement
+        movement.Normalize(); // Prevent faster diagonal movement
     }
 
     void FixedUpdate()

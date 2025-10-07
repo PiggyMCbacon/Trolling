@@ -6,17 +6,23 @@ public class GrapplingHook : MonoBehaviour
     public float maxDistance = 5f;
     public float pullSpeed = 10f;
     public LayerMask grappleLayer;
-    public KeyCode fireKey = KeyCode.Mouse1; // Right-click
+    public KeyCode fireKey = KeyCode.Mouse1;
 
     private LineRenderer lineRenderer;
+    private Rigidbody2D rb;
     private Vector2 grapplePoint;
     private bool isGrappling = false;
-    private Rigidbody2D rb;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         lineRenderer = GetComponent<LineRenderer>();
+
+        // Setup LineRenderer
+        lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+        lineRenderer.startWidth = 0.05f;
+        lineRenderer.endWidth = 0.05f;
+        lineRenderer.sortingOrder = 10;
         lineRenderer.positionCount = 0;
     }
 
@@ -24,6 +30,12 @@ public class GrapplingHook : MonoBehaviour
     {
         if (Input.GetKeyDown(fireKey))
         {
+            if (isGrappling)
+            {
+                StopGrapple();
+                return;
+            }
+
             Vector2 direction = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;
             RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, maxDistance, grappleLayer);
 
@@ -48,14 +60,9 @@ public class GrapplingHook : MonoBehaviour
                 StopGrapple();
             }
         }
-
-        if (Input.GetKeyUp(fireKey))
-        {
-            StopGrapple();
-        }
     }
 
-    void StopGrapple()
+    public void StopGrapple()
     {
         isGrappling = false;
         lineRenderer.positionCount = 0;
